@@ -1,36 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="AmyWare">
+      <UniqueIdentifier>{9B4C4A96-072C-C931-1044-54087CA22F93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="AmyWare\Events">
+      <UniqueIdentifier>{1F5C8EC1-0B2A-82C7-F4BD-F2EDE02A5E2C}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AmyWare\Core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="src\AmyWare.h" />
     <ClInclude Include="src\AmyWare\Application.h">
-      <Filter>Header Files</Filter>
+      <Filter>AmyWare</Filter>
     </ClInclude>
-    <ClInclude Include="src\AmyWare.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\AmyWare\Core.h">
+      <Filter>AmyWare</Filter>
     </ClInclude>
     <ClInclude Include="src\AmyWare\EntryPoint.h">
-      <Filter>Header Files</Filter>
+      <Filter>AmyWare</Filter>
     </ClInclude>
+    <ClInclude Include="src\AmyWare\Events\ApplicationEvent.h">
+      <Filter>AmyWare\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\Events\Event.h">
+      <Filter>AmyWare\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\Events\KeyEvent.h">
+      <Filter>AmyWare\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\Events\MouseEvents.h">
+      <Filter>AmyWare\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\Log.h">
+      <Filter>AmyWare</Filter>
+    </ClInclude>
+    <ClInclude Include="src\awpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AmyWare\Application.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>AmyWare</Filter>
     </ClCompile>
+    <ClCompile Include="src\AmyWare\Log.cpp">
+      <Filter>AmyWare</Filter>
+    </ClCompile>
+    <ClCompile Include="src\awpch.cpp" />
   </ItemGroup>
 </Project>

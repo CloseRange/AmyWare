@@ -12,6 +12,5 @@ public:
 
 
 AmyWare::Application* AmyWare::CreateApplication() {
-	printf("Hello Guys and gals!");
 	return new Sandbox();
 }

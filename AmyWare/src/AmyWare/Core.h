@@ -9,3 +9,5 @@
 #else
 #error AmyWare only works on Windows.
 #endif
+
+#define BIT(x) (1 << x)
