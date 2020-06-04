@@ -1,7 +1,5 @@
 # Directories
 .vs/
 Saves/
-proj/
+proj/*
 !proj/bin/
-
-
