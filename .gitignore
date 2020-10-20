@@ -1,16 +1,15 @@
-# Directories
-.vs/
-bin/
-bin-int/
+# AW
 Saves/
-proj/*
-!proj/bin/
-_/
+*.log
 
-#files
-*.user
-*.sln
-*.vcxproj*
-*.vcxproj
-*.user
-*.ini
+# Binaries
+**/bin/
+!vendor/premake/bin/
+
+# VS
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.user
+**.vcxproj.filters
+**.ini

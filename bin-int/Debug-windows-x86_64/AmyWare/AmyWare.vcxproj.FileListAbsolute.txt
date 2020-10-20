@@ -1,0 +1,2 @@
+D:\VisualStudio\AmyWare\bin\Debug-windows-x86_64\AmyWare\AmyWare.pdb
+D:\VisualStudio\AmyWare\bin-int\Debug-windows-x86_64\AmyWare\AmyWare.pdb
