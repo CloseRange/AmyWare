@@ -1,6 +1,9 @@
 [submodule "AmyWare/vendor/spdlog"]
 	path = AmyWare/vendor/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "AmyWare/vendor/GLFW"]
+[submodule "GLFW"]
 	path = AmyWare/vendor/GLFW
-	url = https://github.com/TheCherno/glfw
+	url = https://github.com/TheCherno/GLFW
+[submodule "AmyWare/vendor/imgui"]
+	path = AmyWare/vendor/imgui
+	url = https://github.com/TheCherno/imgui

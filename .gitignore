@@ -8,3 +8,7 @@ proj/*
 
 #files
 *.user
+*.sln
+*.vcxproj*
+*.vcxproj
+*.user

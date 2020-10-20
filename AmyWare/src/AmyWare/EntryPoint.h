@@ -3,11 +3,16 @@
 
 extern AmyWare::Application* AmyWare::CreateApplication();
 
+
+
 int main(int argc, char** argv) {
-	printf("Hello World");
+	AmyWare::Log::Init();
+
+
 	auto app = AmyWare::CreateApplication();
 	app->Run();
 	delete app;
 }
+
 
 #endif

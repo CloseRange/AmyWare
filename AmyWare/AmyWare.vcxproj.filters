@@ -1,36 +1,93 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="AmyWare">
+      <UniqueIdentifier>{9B4C4A96-072C-C931-1044-54087CA22F93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="AmyWare\Events">
+      <UniqueIdentifier>{1F5C8EC1-0B2A-82C7-F4BD-F2EDE02A5E2C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="AmyWare\ImGui">
+      <UniqueIdentifier>{058A5EFE-714A-DA34-3A85-23B2A6041F11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\OpenGL">
+      <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AmyWare\Core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="src\AmyWare.h" />
     <ClInclude Include="src\AmyWare\Application.h">
-      <Filter>Header Files</Filter>
+      <Filter>AmyWare</Filter>
     </ClInclude>
-    <ClInclude Include="src\AmyWare.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\AmyWare\Core.h">
+      <Filter>AmyWare</Filter>
     </ClInclude>
     <ClInclude Include="src\AmyWare\EntryPoint.h">
-      <Filter>Header Files</Filter>
+      <Filter>AmyWare</Filter>
     </ClInclude>
+    <ClInclude Include="src\AmyWare\Events\ApplicationEvent.h">
+      <Filter>AmyWare\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\Events\Event.h">
+      <Filter>AmyWare\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\Events\KeyEvent.h">
+      <Filter>AmyWare\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\Events\MouseEvent.h">
+      <Filter>AmyWare\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\ImGui\ImGuiLayer.h">
+      <Filter>AmyWare\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\Layer.h">
+      <Filter>AmyWare</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\LayerStack.h">
+      <Filter>AmyWare</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\Log.h">
+      <Filter>AmyWare</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmyWare\Window.h">
+      <Filter>AmyWare</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\awpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AmyWare\Application.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>AmyWare</Filter>
     </ClCompile>
+    <ClCompile Include="src\AmyWare\ImGui\ImGuiLayer.cpp">
+      <Filter>AmyWare\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AmyWare\Layer.cpp">
+      <Filter>AmyWare</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AmyWare\LayerStack.cpp">
+      <Filter>AmyWare</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AmyWare\Log.cpp">
+      <Filter>AmyWare</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\awpch.cpp" />
   </ItemGroup>
 </Project>
