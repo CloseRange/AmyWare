@@ -1,10 +1,14 @@
 #pragma once
 
 #ifdef AW_PLATFORM_WINDOWS
-	#ifdef AW_BUILD_DLL
-		#define AW_API __declspec(dllexport)
+	#if AW_DYNAMIC_LINK
+		#ifdef AW_BUILD_DLL
+			#define AW_API __declspec(dllexport)
+		#else
+			#define AW_API __declspec(dllimport)
+		#endif
 	#else
-		#define AW_API __declspec(dllimport)
+		#define AW_API 
 	#endif
 #else
 #error AmyWare only supports Windows!

@@ -5,7 +5,7 @@
 #include <sstream>
 
 namespace AmyWare {
-	class AW_API PressEvent;
+	class PressEvent;
 	enum class EventType {
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowlostFocus, WindowMoved,
@@ -27,7 +27,7 @@ namespace AmyWare {
 								virtual const char* GetName() const override { return #type; }
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
-	class AW_API Event {
+	class Event {
 		friend class EventDispatcher;
 	public:
 		virtual EventType GetEventType() const = 0;
@@ -42,7 +42,7 @@ namespace AmyWare {
 	};
 
 	
-	class AW_API EventDispatcher {
+	class EventDispatcher {
 		template<typename T>
 		using EventFn = std::function<bool(T&)>;
 	public:

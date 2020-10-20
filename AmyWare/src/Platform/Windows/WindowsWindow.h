@@ -1,7 +1,9 @@
 #pragma once
 #include "AmyWare/Window.h"
+#include "AmyWare/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
+
 
 namespace AmyWare {
 	class WindowsWindow : public Window {
@@ -22,6 +24,7 @@ namespace AmyWare {
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* Context;
 		struct WindowData {
 			std::string Title;
 			unsigned int Width, Height;

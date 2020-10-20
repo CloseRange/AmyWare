@@ -4,7 +4,8 @@
 #include "AmyWare/Events/MouseEvent.h"
 #include "AmyWare/Events/ApplicationEvent.h"
 
-#include <glad/glad.h>
+#include "Platform/OpenGL/OpenGlContext.h"
+
 
 namespace AmyWare {
 	static bool s_GLFWInitialized = false;
@@ -26,8 +27,9 @@ namespace AmyWare {
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
-
 		AW_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
+
+
 		if (!s_GLFWInitialized) {
 			int success = glfwInit();
 			AW_CORE_ASSERT(success, "Could not initalize GLFW!");
@@ -37,9 +39,11 @@ namespace AmyWare {
 			s_GLFWInitialized = true;
 		}
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		AW_CORE_ASSERT(status, "Failed ot initalize Glad!");
+
+		Context = new OpenGLContext(m_Window);
+		Context->Init();
+
+
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
@@ -116,7 +120,7 @@ namespace AmyWare {
 	}
 	void WindowsWindow::OnUpdate() {
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		Context->SwapBuffers();
 	}
 	void WindowsWindow::SetVSync(bool enabled) {
 		glfwSwapInterval(enabled ? 1 : 0);
