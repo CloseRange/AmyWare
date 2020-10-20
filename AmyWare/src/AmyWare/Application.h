@@ -7,6 +7,8 @@
 #include "AmyWare/Events/Event.h"
 #include "AmyWare/Events/ApplicationEvent.h"
 
+#include "AmyWare/ImGui/ImGuiLayer.h"
+
 namespace AmyWare {
 	class AW_API Application {
 	public:
@@ -26,6 +28,7 @@ namespace AmyWare {
 		bool OnWindowClosed(WindowCloseEvent& event);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 

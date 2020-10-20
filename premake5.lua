@@ -13,6 +13,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "AmyWare/vendor/GLFW/include"
 IncludeDir["Glad"] = "AmyWare/vendor/Glad/include"
 IncludeDir["ImGui"] = "AmyWare/vendor/imgui"
+IncludeDir["glm"] = "AmyWare/vendor/glm"
 
 group "Dependencies"
 	include "AmyWare/vendor/GLFW"
@@ -22,8 +23,10 @@ group ""
 
 project "AmyWare"
 	location "AmyWare"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -33,14 +36,20 @@ project "AmyWare"
 
 	files {
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
+	}
+	defines {
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 	includedirs {
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
 	}
 	links {
 		"GLFW",
@@ -49,8 +58,6 @@ project "AmyWare"
 		"opengl32.lib"
 	}
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines {
@@ -65,17 +72,17 @@ project "AmyWare"
 
 	filter "configurations:Debug"
 		defines "AW_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "AW_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "AW_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 
@@ -86,6 +93,8 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -96,14 +105,14 @@ project "Sandbox"
 	}
 	includedirs {
 		"AmyWare/vendor/spdlog/include",
-		"Amyware/src"
+		"AmyWare/src",
+		"AmyWare/vendor",
+		"%{IncludeDir.glm}",
 	}
 	links {
 		"AmyWare"
 	}
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines {
@@ -112,15 +121,15 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "AW_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "AW_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "AW_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"

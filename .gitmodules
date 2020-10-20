@@ -7,3 +7,6 @@
 [submodule "AmyWare/vendor/imgui"]
 	path = AmyWare/vendor/imgui
 	url = https://github.com/TheCherno/imgui
+[submodule "AmyWare/vendor/glm"]
+	path = AmyWare/vendor/glm
+	url = https://github.com/g-truc/glm
