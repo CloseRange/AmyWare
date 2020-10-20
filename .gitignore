@@ -5,6 +5,7 @@ bin-int/
 Saves/
 proj/*
 !proj/bin/
+_/
 
 #files
 *.user
@@ -12,3 +13,4 @@ proj/*
 *.vcxproj*
 *.vcxproj
 *.user
+*.ini
