@@ -6,7 +6,7 @@
 #include "AmyWare/Events/ApplicationEvent.h"
 
 namespace AmyWare {
-	class AW_API ImGuiLayer : public Layer {
+	class ImGuiLayer : public Layer {
 	public:
 		ImGuiLayer();
 		~ImGuiLayer();
@@ -17,6 +17,7 @@ namespace AmyWare {
 
 		void Begin();
 		void End();
+
 	private:
 		float m_Time = 0.0f;
 

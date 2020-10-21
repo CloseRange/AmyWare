@@ -10,7 +10,6 @@
 #include "AmyWare/Events/MouseEvent.h"
 #include "AmyWare/ImGui/ImGuiLayer.h"
 
-
 #include "AmyWare/Layer.h"
 
 // --- Entry Point -----------------

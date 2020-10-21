@@ -1,7 +1,6 @@
 #include "awpch.h"
 #include "ImGuiLayer.h"
 
-#include "imgui.h"
 #include "examples/imgui_impl_glfw.h"
 #include "examples/imgui_impl_opengl3.h"
 
@@ -32,7 +31,7 @@ namespace AmyWare {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
 		// Setup Dear ImGui style
-		ImGui::StyleColorsDark();
+		ImGui::StyleColorsClassic();
 		//ImGui::StyleColorsClassic();
 
 		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
@@ -41,6 +40,8 @@ namespace AmyWare {
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
+		//style.ScaleAllSizes(1.3);
+		ImGui::GetIO().FontGlobalScale = 2.0f;
 
 		Application& app = Application::Get();
 		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
@@ -48,6 +49,7 @@ namespace AmyWare {
 		// Setup Platform/Renderer bindings
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
+
 	}
 
 	void ImGuiLayer::OnDetach() {
@@ -82,6 +84,9 @@ namespace AmyWare {
 	void ImGuiLayer::OnImGuiRender() {
 		static bool show = true;
 		ImGui::ShowDemoWindow(&show);
+		// ImGui::SetWindowFontScale(1.8);
 	}
+
+
 }
 
