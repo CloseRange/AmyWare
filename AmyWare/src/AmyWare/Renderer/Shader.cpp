@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace AmyWare {
 	Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc) {
 		// Create an empty vertex shader handle
@@ -67,8 +69,8 @@ namespace AmyWare {
 		// Vertex and fragment shaders are successfully compiled.
 		// Now time to link them together into a program.
 		// Get a program object.
-		RendererID = glCreateProgram();
-		GLuint program = RendererID;
+		rendererID = glCreateProgram();
+		GLuint program = rendererID;
 
 		// Attach our shaders to our program
 		glAttachShader(program, vertexShader);
@@ -104,12 +106,16 @@ namespace AmyWare {
 		glDetachShader(program, fragmentShader);
 	}
 	Shader::~Shader() {
-		glDeleteProgram(RendererID);
+		glDeleteProgram(rendererID);
 	}
 	void Shader::Bind() const {
-		glUseProgram(RendererID);
+		glUseProgram(rendererID);
 	}
 	void Shader::Unbind() const {
 		glUseProgram(0);
+	}
+	void Shader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix) {
+		GLint location = glGetUniformLocation(rendererID, name.c_str());
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 }

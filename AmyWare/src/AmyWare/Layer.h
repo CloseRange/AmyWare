@@ -2,6 +2,8 @@
 #include "AmyWare/Core.h"
 #include "AmyWare/Events/Event.h"
 
+#include "AmyWare/Core/Timestep.h"
+
 namespace AmyWare {
 	class AW_API Layer {
 	public:
@@ -11,7 +13,7 @@ namespace AmyWare {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 

@@ -7,15 +7,12 @@
 #include "AmyWare/Events/Event.h"
 #include "AmyWare/Events/ApplicationEvent.h"
 
+#include "AmyWare/Core/Timestep.h"
+
 #include "AmyWare/ImGui/ImGuiLayer.h"
 
-#include "AmyWare/Renderer/Shader.h"
-#include "AmyWare/Renderer/Buffer.h"
-#include "AmyWare/Renderer/VertexArray.h"
-
-
 namespace AmyWare {
-	class AW_API Application {
+	class Application {
 	public:
 		Application();
 		virtual ~Application();
@@ -37,12 +34,11 @@ namespace AmyWare {
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		static Application* Instance;
+		float lastFrameTime = 0.0f;
 
-		std::shared_ptr<Shader> shader;
-		std::shared_ptr<Shader> shader2;
-		std::shared_ptr<VertexArray> vertexArray;
-		std::shared_ptr<VertexArray> squareVA;
+		static Application* Instance;
+		
+
 	};
 
 	Application* CreateApplication();
