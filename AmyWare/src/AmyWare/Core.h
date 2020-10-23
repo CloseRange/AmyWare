@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef AW_PLATFORM_WINDOWS
 	#if AW_DYNAMIC_LINK
 		#ifdef AW_BUILD_DLL
@@ -28,5 +30,14 @@
 
 
 #define BIT(x) (1 << x)
-#define AW_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1
+#define AW_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
+
+namespace AmyWare {
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+}
 

@@ -14,6 +14,7 @@ IncludeDir["GLFW"] = "AmyWare/vendor/GLFW/include"
 IncludeDir["Glad"] = "AmyWare/vendor/Glad/include"
 IncludeDir["ImGui"] = "AmyWare/vendor/imgui"
 IncludeDir["glm"] = "AmyWare/vendor/glm"
+IncludeDir["stb_image"] = "AmyWare/vendor/stb_image"
 
 group "Dependencies"
 	include "AmyWare/vendor/GLFW"
@@ -37,6 +38,8 @@ project "AmyWare"
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
@@ -49,7 +52,8 @@ project "AmyWare"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
 	}
 	links {
 		"GLFW",

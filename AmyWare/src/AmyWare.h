@@ -11,6 +11,7 @@
 #include "AmyWare/Input.h"
 #include "AmyWare/KeyCodes.h"
 #include "AmyWare/MouseButtonCodes.h"
+#include "AmyWare/OrthographicCameraController.h"
 
 
 // ---------------------------------
@@ -21,6 +22,7 @@
 
 #include "AmyWare/Renderer/Buffer.h"
 #include "AmyWare/Renderer/Shader.h"
+#include "AmyWare/Renderer/Texture.h"
 #include "AmyWare/Renderer/VertexArray.h"
 
 #include "AmyWare/Renderer/OrthographicCamera.h"

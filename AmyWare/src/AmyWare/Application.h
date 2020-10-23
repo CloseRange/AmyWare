@@ -28,11 +28,13 @@ namespace AmyWare {
 		inline Window& GetWindow() { return *m_Window; }
 	private:
 		bool OnWindowClosed(WindowCloseEvent& event);
+		bool OnWindowResize(WindowResizeEvent& event);
 
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+		bool minimized = false;
 
 		float lastFrameTime = 0.0f;
 

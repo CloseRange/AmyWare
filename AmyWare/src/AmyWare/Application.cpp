@@ -20,6 +20,8 @@ namespace AmyWare {
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT(OnEvent));
 
+		Renderer::Init();
+
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 		// Palette::ApplyToGui(Palette::AmyPalette);
@@ -30,6 +32,7 @@ namespace AmyWare {
 	void Application::OnEvent(Event& e) {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(OnWindowClosed));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT(OnWindowResize));
 
 
 
@@ -52,10 +55,11 @@ namespace AmyWare {
 		while (m_Running) {
 			float time = (float) glfwGetTime(); // Platform::GetTime
 			Timestep timestep = time - lastFrameTime;
-
 			lastFrameTime = time;
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(timestep);
+
+			if(!minimized)
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(timestep);
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
@@ -69,5 +73,15 @@ namespace AmyWare {
 	bool Application::OnWindowClosed(WindowCloseEvent& event) {
 		m_Running = false;
 		return true;
+	}
+	bool Application::OnWindowResize(WindowResizeEvent& event) {
+		if (event.GetWidth() == 0 || event.GetHeight() == 0) {
+			minimized = true;
+			return false;
+		}
+		minimized = false;
+		Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
+
+		return false;
 	}
 }

@@ -1,10 +1,11 @@
 
 #include <AmyWare.h>
-#include <sstream>
-#include <glm/gtc/matrix_transform.hpp>
+#include "Platform/OpenGL/OpenGLShader.h"
 
 #include "imgui/imgui.h"
-#include <string>
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ExLayer : public AmyWare::Layer {
 public:
@@ -27,170 +28,110 @@ public:
 
 
 
-	ExLayer() : Layer("Example"), camera(-1.6f, 1.6f, -0.9f, 0.9f), squarePosition(0.0f) {
-		vertexArray.reset(AmyWare::VertexArray::Create());
+	ExLayer() : Layer("Example"), camera(1280.0f / 720.0f) {
 		tracker = DataTracker();
-		float vertices[4 * 7] = {
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-			 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
-		};
-
-		std::shared_ptr<AmyWare::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(AmyWare::VertexBuffer::Create(vertices, sizeof(vertices)));
-
-		AmyWare::BufferLayout layout = {
-			{ AmyWare::ShaderDataType::Float3, "a_Position" },
-			{ AmyWare::ShaderDataType::Float4, "a_Color" }
-		};
-		vertexBuffer->SetLayout(layout);
-		vertexArray->AddVertexBuffer(vertexBuffer);
-
-
-		uint32_t indices[6] = { 0, 1, 2, 2, 1, 3 };
-		std::shared_ptr<AmyWare::IndexBuffer> indexBuffer;
-		indexBuffer.reset(AmyWare::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		vertexArray->SetIndexBuffer(indexBuffer);
-
-
-
-
-
 		// make vertex array
 		squareVA.reset(AmyWare::VertexArray::Create());
 		// make vertex buffer
-		float vertices2[4 * 3] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
+		float vertices2[4 * 5] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f
 		};
-		std::shared_ptr<AmyWare::VertexBuffer> squareVB;
+		AmyWare::Ref<AmyWare::VertexBuffer> squareVB;
 		squareVB.reset(AmyWare::VertexBuffer::Create(vertices2, sizeof(vertices2)));
 		// make layout
 		squareVB->SetLayout({
-			{ AmyWare::ShaderDataType::Float3, "a_Position" }
+			{ AmyWare::ShaderDataType::Float3, "a_Position" },
+			{ AmyWare::ShaderDataType::Float2, "a_TexCoord" }
 		});
 		squareVA->AddVertexBuffer(squareVB);
 		// make index buffer
 		uint32_t indices2[6] = { 0, 1, 2, 2, 1, 3 };
-		std::shared_ptr<AmyWare::IndexBuffer> squreIB;
+		AmyWare::Ref<AmyWare::IndexBuffer> squreIB;
 		squreIB.reset(AmyWare::IndexBuffer::Create(indices2, sizeof(indices2) / sizeof(uint32_t)));
 		squareVA->SetIndexBuffer(squreIB);
-		// make shader
-		std::string vertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			out vec3 v_Position;
-			out vec4 v_Color;
-
-			void main() {
-				v_Position = a_Position;
-				v_Color = a_Color;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}
-		)";
-		std::string fragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			in vec3 v_Position;
-			in vec4 v_Color;
-
-			void main() {
-				color = vec4(v_Position * 0.5 + 0.5, 1.0);
-				color = v_Color;
-			}
-		)";
-		std::string vertexSrc2 = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			out vec3 v_Position;
-
-			void main() {
-				v_Position = a_Position;
-				gl_Position = u_ViewProjection * u_Transform *vec4(a_Position, 1.0);
-			}
-		)";
-		std::string fragmentSrc2 = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			in vec3 v_Position;
-
-			void main() {
-				color = vec4(0.2, 0.3, 0.8, 1.0);
-			}
-		)";
 
 
-
-		shader.reset(new AmyWare::Shader(vertexSrc, fragmentSrc));
-		shader2.reset(new AmyWare::Shader(vertexSrc2, fragmentSrc2));
+		auto flatShader = sLibrary.Load("assets/shaders/FlatShader.glsl");
+		auto textureShader = sLibrary.Load("assets/shaders/Texture.glsl");
+		//shader2 = AmyWare::Shader::Create("assets/shaders/FlatShader.glsl");
 	
+		texture = AmyWare::Texture2D::Create("assets/textures/Icon_Key_Crystal.png");
+		std::dynamic_pointer_cast<AmyWare::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<AmyWare::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
+
+
 	}
 	void OnUpdate(AmyWare::Timestep ts) override {
+
+		camera.OnUpdate(ts);
 		AmyWare::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		AmyWare::RenderCommand::Clear();
 
-		
-		glm::vec3 pos = camera.GetPosition();
-		float spd = 5;
-		if (AmyWare::Input::IsKeyDown(AW_KEY_LEFT)) pos.x -= spd * ts;
-		if (AmyWare::Input::IsKeyDown(AW_KEY_RIGHT)) pos.x += spd * ts;
-		if (AmyWare::Input::IsKeyDown(AW_KEY_UP)) pos.y += spd * ts;
-		if (AmyWare::Input::IsKeyDown(AW_KEY_DOWN)) pos.y -= spd * ts;
-		camera.SetPosition(pos);
 
-		if (AmyWare::Input::IsKeyDown(AW_KEY_W)) squarePosition.y += spd * ts;
-		if (AmyWare::Input::IsKeyDown(AW_KEY_A)) squarePosition.x -= spd * ts;
-		if (AmyWare::Input::IsKeyDown(AW_KEY_S)) squarePosition.y -= spd * ts;
-		if (AmyWare::Input::IsKeyDown(AW_KEY_D)) squarePosition.x += spd * ts;
+		AmyWare::Renderer::BeginScene(camera.GetCamera());
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), squarePosition);
 
-		AmyWare::Renderer::BeginScene(camera);
-		AmyWare::Renderer::Submit(shader2, squareVA);
-		AmyWare::Renderer::Submit(shader, vertexArray, transform);
+		// AmyWare::MaterialRef material = new AmyWare::Material(shader2);
+
+		auto flatShader = sLibrary.Get("FlatShader");
+		auto textureShader = sLibrary.Get("Texture");
+		std::dynamic_pointer_cast<AmyWare::OpenGLShader>(flatShader)->Bind();
+		std::dynamic_pointer_cast<AmyWare::OpenGLShader>(flatShader)->UploadUniformFloat3("u_Color", color);
+
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		for (int y = 0; y < squareC; y++) {
+			for (int x = 0; x < squareC; x++) {
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				AmyWare::Renderer::Submit(flatShader, squareVA, transform);
+
+			}
+		}
+		texture->Bind();
+		AmyWare::Renderer::Submit(textureShader, squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		//glm::mat4 transform = glm::translate(glm::mat4(1.0f), squarePosition);
+		// AmyWare::Renderer::Submit(shader, vertexArray, transform);
 		AmyWare::Renderer::EndScene();
 		tracker.Push(ts);
 	}
 	virtual void OnImGuiRender() override {
 
-		ImGui::Begin("Stuff Log");
-		ImGui::Text("SECONDS PER FRAME  :  %f", tracker.GetTime());
-		ImGui::Text(" ----- Square Position -----");
-		ImGui::Text("(%f, %f)", squarePosition.x, squarePosition.y);
-		ImGui::Text(" ----- Camera Position -----");
-		ImGui::Text("(%f, %f)", camera.GetPosition().x, camera.GetPosition().y);
+		ImGui::Begin("Debug Log");
+			ImGui::Text("SECONDS PER FRAME     %f", tracker.GetTime());
+			ImGui::Text("FPS                   %f", 1.0f / tracker.GetTime());
+			ImGui::Text("SQUARES               %i", squareC * squareC);
 		ImGui::End();
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(color));
+		ImGui::End();
+
 	}
 	void OnEvent(AmyWare::Event& event) override {
+		camera.OnEvent(event);
+		/*
+		if (event.GetEventType() == AmyWare::EventType::WindowResize) {
+			auto& re = (AmyWare::WindowResizeEvent&)event;
+			float zoom = (float)re.GetWidth() / 1280.0f;
+			camera.SetZoomLevel(zoom);
+		}
+		*/
 	}
 private:
-	std::shared_ptr<AmyWare::Shader> shader;
-	std::shared_ptr<AmyWare::Shader> shader2;
-	std::shared_ptr<AmyWare::VertexArray> vertexArray;
-	std::shared_ptr<AmyWare::VertexArray> squareVA;
+	AmyWare::ShaderLibrary sLibrary;
 
-	AmyWare::OrthographicCamera camera;
+	AmyWare::Ref<AmyWare::Texture2D> texture;
+	AmyWare::Ref<AmyWare::VertexArray> vertexArray;
+	AmyWare::Ref<AmyWare::VertexArray> squareVA;
 
-	glm::vec3 squarePosition;
+
 	DataTracker tracker;
+	glm::vec3 color = { 0.2f, 0.3f, 0.8f };
+	int squareC = 5;
+
+	AmyWare::OrthographicCameraController camera;
 };
 
 class Sandbox : public AmyWare::Application {

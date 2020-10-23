@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <cstdint>
+#include <array>
 
 #include "AmyWare/Log.h"
 
