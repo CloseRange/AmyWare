@@ -1,5 +1,5 @@
 #pragma once
-#include "AmyWare/Window.h"
+#include "AmyWare/Core/Window.h"
 #include "AmyWare/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
@@ -12,8 +12,8 @@ namespace AmyWare {
 		virtual ~WindowsWindow();
 
 		void OnUpdate() override;
-		inline unsigned int GetWidth() const override { return m_Data.Width; }
-		inline unsigned int GetHeight() const override { return m_Data.Height; }
+		inline uint32_t GetWidth() const override { return m_Data.Width; }
+		inline uint32_t GetHeight() const override { return m_Data.Height; }
 
 		inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; }
 		void SetVSync(bool enabled) override;

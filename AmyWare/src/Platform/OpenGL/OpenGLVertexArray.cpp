@@ -24,18 +24,28 @@ namespace AmyWare {
 	}
 
 	OpenGLVertexArray::OpenGLVertexArray() {
+		AW_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &rendererID);
 	}
 	OpenGLVertexArray::~OpenGLVertexArray() {
+		AW_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &rendererID);
 	}
 	void OpenGLVertexArray::Bind() const {
+		AW_PROFILE_FUNCTION();
+
 		glBindVertexArray(rendererID);
 	}
 	void OpenGLVertexArray::Unbind() const {
+		AW_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) {
+		AW_PROFILE_FUNCTION();
+
 		AW_CORE_ASSERT(vertexBuffer->GetLayout().GetElements.size(), "Vertex buffer has no layout!");
 
 		glBindVertexArray(rendererID);
@@ -57,6 +67,8 @@ namespace AmyWare {
 		this->vertexBuffers.push_back(vertexBuffer);
 	}
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer) {
+		AW_PROFILE_FUNCTION();
+
 		glBindVertexArray(rendererID);
 		indexBuffer->Bind();
 

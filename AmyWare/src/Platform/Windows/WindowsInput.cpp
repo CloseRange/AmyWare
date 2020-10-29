@@ -1,7 +1,7 @@
 #include "awpch.h"
 #include "WindowsInput.h"
 
-#include "AmyWare/Application.h"
+#include "AmyWare/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace AmyWare {

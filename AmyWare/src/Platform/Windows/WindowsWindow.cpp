@@ -14,16 +14,21 @@ namespace AmyWare {
 		AW_CORE_ERROR("GLFW ERROR [ {0} ]: {1}", error, description);
 	}
 
-	Window* Window::Create(const WindowProps& props) {
-		return new WindowsWindow(props);
+	Scope<Window> Window::Create(const WindowProps& props) {
+		return CreateScope<WindowsWindow>(props);
 	}
 	WindowsWindow::WindowsWindow(const WindowProps& props) {
+		AW_PROFILE_FUNCTION();
+
 		Init(props);
 	}
 	WindowsWindow::~WindowsWindow() {
+		AW_PROFILE_FUNCTION();
 		Shutdown();
 	}
 	void WindowsWindow::Init(const WindowProps& props) {
+		AW_PROFILE_FUNCTION();
+
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
@@ -31,6 +36,7 @@ namespace AmyWare {
 
 
 		if (!s_GLFWInitialized) {
+			AW_PROFILE_SCOPE("glfwInit");
 			int success = glfwInit();
 			AW_CORE_ASSERT(success, "Could not initalize GLFW!");
 
@@ -38,7 +44,10 @@ namespace AmyWare {
 
 			s_GLFWInitialized = true;
 		}
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		{
+			AW_PROFILE_SCOPE("glfwCreateWindow");
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		}
 
 		Context = new OpenGLContext(m_Window);
 		Context->Init();
@@ -116,13 +125,16 @@ namespace AmyWare {
 
 	}
 	void WindowsWindow::Shutdown() {
+		AW_PROFILE_FUNCTION();
 		glfwDestroyWindow(m_Window);
 	}
 	void WindowsWindow::OnUpdate() {
+		AW_PROFILE_FUNCTION();
 		glfwPollEvents();
 		Context->SwapBuffers();
 	}
 	void WindowsWindow::SetVSync(bool enabled) {
+		AW_PROFILE_FUNCTION();
 		glfwSwapInterval(enabled ? 1 : 0);
 		m_Data.VSync = enabled;
 	}

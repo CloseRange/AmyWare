@@ -1,33 +1,42 @@
 #pragma once
+// ---------------------------------
+// ---   CORE  ---------------------
+// ---------------------------------
+#include "AmyWare/Core/Application.h"
 
-#include "AmyWare/Application.h"
-#include "AmyWare/Log.h"
+#include "AmyWare/Core/Layer.h"
 
-#include "AmyWare/Core/Timestep.h"
+#include "AmyWare/Core/Input.h"
+#include "AmyWare/Core/KeyCodes.h"
+#include "AmyWare/Core/MouseButtonCodes.h"
 
-#include "AmyWare/Layer.h"
+// ---------------------------------
+// ---   GUI  ----------------------
+// ---------------------------------
 #include "AmyWare/ImGui/ImGuiLayer.h"
 
-#include "AmyWare/Input.h"
-#include "AmyWare/KeyCodes.h"
-#include "AmyWare/MouseButtonCodes.h"
-#include "AmyWare/OrthographicCameraController.h"
+// ---------------------------------
+// ---   UTILITY  ------------------
+// ---------------------------------
+#include "AmyWare/Utility/Log.h"
+#include "AmyWare/Utility/Timestep.h"
+#include "AmyWare/Utility/OrthographicCameraController.h"
+#include "AmyWare/Utility/Drawable.h"
 
 
 // ---------------------------------
-// --- Renderer  -------------------
+// ---   Renderer  -----------------
 // ---------------------------------
 #include "AmyWare/Renderer/Renderer.h"
+#include "AmyWare/Renderer/Renderer2D.h"
 #include "AmyWare/Renderer/RenderCommand.h"
 
 #include "AmyWare/Renderer/Buffer.h"
+#include "AmyWare/Renderer/FrameBuffer.h"
 #include "AmyWare/Renderer/Shader.h"
 #include "AmyWare/Renderer/Texture.h"
+#include "AmyWare/Renderer/SubTexture2D.h"
 #include "AmyWare/Renderer/VertexArray.h"
 
 #include "AmyWare/Renderer/OrthographicCamera.h"
 
-// ---------------------------------
-// --- Entry Point -----------------
-// ---------------------------------
-#include "AmyWare/EntryPoint.h"

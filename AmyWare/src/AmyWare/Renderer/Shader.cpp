@@ -8,7 +8,7 @@ namespace AmyWare {
 	Ref<Shader> Shader::Create(const std::string& filepath) {
 		switch (Renderer::GetAPI()) {
 		case RendererAPI::API::None:	    AW_CORE_ASSERT(false, "RendererAPI::None isn't yet supported");
-		case RendererAPI::API::OpenGL:		return std::make_shared<OpenGLShader>(filepath);
+		case RendererAPI::API::OpenGL:		return CreateRef<OpenGLShader>(filepath);
 		}
 		AW_CORE_ASSERT(false, "RendererAPI is uknown");
 		return nullptr;
@@ -16,7 +16,7 @@ namespace AmyWare {
 	Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) {
 		switch (Renderer::GetAPI()) {
 			case RendererAPI::API::None:	    AW_CORE_ASSERT(false, "RendererAPI::None isn't yet supported");
-			case RendererAPI::API::OpenGL:		return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
+			case RendererAPI::API::OpenGL:		return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 		}
 		AW_CORE_ASSERT(false, "RendererAPI is uknown");
 		return nullptr;

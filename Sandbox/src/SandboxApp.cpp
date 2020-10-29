@@ -1,11 +1,15 @@
 
 #include <AmyWare.h>
+#include <AmyWare/Core/EntryPoint.h>
+
 #include "Platform/OpenGL/OpenGLShader.h"
 
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Sandbox2D.h"
 
 class ExLayer : public AmyWare::Layer {
 public:
@@ -31,7 +35,7 @@ public:
 	ExLayer() : Layer("Example"), camera(1280.0f / 720.0f) {
 		tracker = DataTracker();
 		// make vertex array
-		squareVA.reset(AmyWare::VertexArray::Create());
+		squareVA = AmyWare::VertexArray::Create();
 		// make vertex buffer
 		float vertices2[4 * 5] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -40,7 +44,7 @@ public:
 			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f
 		};
 		AmyWare::Ref<AmyWare::VertexBuffer> squareVB;
-		squareVB.reset(AmyWare::VertexBuffer::Create(vertices2, sizeof(vertices2)));
+		squareVB = AmyWare::VertexBuffer::Create(vertices2, sizeof(vertices2));
 		// make layout
 		squareVB->SetLayout({
 			{ AmyWare::ShaderDataType::Float3, "a_Position" },
@@ -50,7 +54,7 @@ public:
 		// make index buffer
 		uint32_t indices2[6] = { 0, 1, 2, 2, 1, 3 };
 		AmyWare::Ref<AmyWare::IndexBuffer> squreIB;
-		squreIB.reset(AmyWare::IndexBuffer::Create(indices2, sizeof(indices2) / sizeof(uint32_t)));
+		squreIB = AmyWare::IndexBuffer::Create(indices2, sizeof(indices2) / sizeof(uint32_t));
 		squareVA->SetIndexBuffer(squreIB);
 
 
@@ -137,7 +141,8 @@ private:
 class Sandbox : public AmyWare::Application {
 public:
 	Sandbox() {
-		PushLayer(new ExLayer());
+		//PushLayer(new ExLayer());
+		PushLayer(new Sandbox2D());
 	}
 	~Sandbox() {
 

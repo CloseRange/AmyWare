@@ -14,7 +14,8 @@
 #include <cstdint>
 #include <array>
 
-#include "AmyWare/Log.h"
+#include "AmyWare/Utility/Log.h"
+#include "AmyWare/Utility/Instrumentor.h"
 
 #ifdef AW_PLATFORM_WINDOWS
 	#include <Windows.h>

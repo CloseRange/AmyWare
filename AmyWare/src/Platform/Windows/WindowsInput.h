@@ -1,6 +1,6 @@
 #pragma once
-#include "AmyWare/Core.h"
-#include "AmyWare/Input.h"
+#include "AmyWare/Core/Core.h"
+#include "AmyWare/Core/Input.h"
 
 namespace AmyWare {
 	class WindowsInput : public Input {

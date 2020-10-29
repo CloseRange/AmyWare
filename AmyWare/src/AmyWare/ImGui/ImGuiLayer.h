@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AmyWare/Layer.h"
+#include "AmyWare/Core/Layer.h"
 #include "AmyWare/Events/KeyEvent.h"
 #include "AmyWare/Events/MouseEvent.h"
 #include "AmyWare/Events/ApplicationEvent.h"
@@ -13,7 +13,6 @@ namespace AmyWare {
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnImGuiRender() override;
 
 		void Begin();
 		void End();

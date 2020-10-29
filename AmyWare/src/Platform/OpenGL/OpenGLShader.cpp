@@ -18,6 +18,8 @@ namespace AmyWare {
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& filepath) {
+		AW_PROFILE_FUNCTION();
+
 		std::string source = ReadFile(filepath);
 		auto shaderSources = PreProcess(source);
 		Compile(shaderSources);
@@ -29,6 +31,8 @@ namespace AmyWare {
 		name = filepath.substr(lastSlash, count);
 	}
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) {
+		AW_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
@@ -41,6 +45,8 @@ namespace AmyWare {
 		return name;
 	};
 	void OpenGLShader::Compile(std::unordered_map<GLenum, std::string> shaderSources) {
+		AW_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram();
 		AW_CORE_ASSERT(shaderSources.size() <= 2, "We only support 2 shaders for now");
 		std::array<GLenum, 2> glShaderIDs;
@@ -105,9 +111,13 @@ namespace AmyWare {
 			glDetachShader(program,	id);
 	}
 	OpenGLShader::~OpenGLShader() {
+		AW_PROFILE_FUNCTION();
+
 		glDeleteProgram(RendererID);
 	}
 	std::string OpenGLShader::ReadFile(const std::string& filepath) {
+		AW_PROFILE_FUNCTION();
+
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		std::string result;
 		if (in) {
@@ -120,6 +130,8 @@ namespace AmyWare {
 		return result;
 	}
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source) {
+		AW_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -142,14 +154,54 @@ namespace AmyWare {
 	}
 
 	void OpenGLShader::Bind() const {
+		AW_PROFILE_FUNCTION();
+
 		glUseProgram(RendererID);
 	}
 	void OpenGLShader::Unbind() const {
+		AW_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
+	void OpenGLShader::SetInt(const std::string& name, int value) {
+		AW_PROFILE_FUNCTION();
+
+		UploadUniformInt(name, value);
+	}
+	void OpenGLShader::SetIntArray(const std::string& name, int* values, uint32_t count) {
+		AW_PROFILE_FUNCTION();
+
+		UploadUniformIntArray(name, values, count);
+	}
+	void OpenGLShader::SetFloat(const std::string& name, float value) {
+		AW_PROFILE_FUNCTION();
+
+		UploadUniformFloat(name, value);
+	}
+	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& value) {
+		AW_PROFILE_FUNCTION();
+
+		UploadUniformFloat3(name, value);
+	}
+	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& value) {
+		AW_PROFILE_FUNCTION();
+
+		UploadUniformFloat4(name, value);
+	}
+	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value) {
+		AW_PROFILE_FUNCTION();
+
+		UploadUniformMat4(name, value);
+	}
+
+
 	void OpenGLShader::UploadUniformInt(const std::string& name, int value) {
 		GLint location = glGetUniformLocation(RendererID, name.c_str());
 		glUniform1i(location, value);
+	}
+	void OpenGLShader::UploadUniformIntArray(const std::string& name, int* values, uint32_t count) {
+		GLint location = glGetUniformLocation(RendererID, name.c_str());
+		glUniform1iv(location, count, values);
 	}
 	void OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& value) {
 		GLint location = glGetUniformLocation(RendererID, name.c_str());

@@ -10,6 +10,8 @@ namespace AmyWare {
 		AW_CORE_ASSERT(windowHandle,"GLFW Window has not yet been defined!");
 	}
 	void OpenGLContext::Init() {
+		AW_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(windowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		AW_CORE_ASSERT(status, "Failed ot initalize Glad!");
@@ -20,6 +22,7 @@ namespace AmyWare {
 		AW_CORE_INFO("  Version    {0}", glGetString(GL_VERSION));
 	}
 	void OpenGLContext::SwapBuffers() {
+		AW_PROFILE_FUNCTION();
 
 		glfwSwapBuffers(windowHandle);
 	}

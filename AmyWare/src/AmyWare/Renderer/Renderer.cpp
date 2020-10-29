@@ -1,5 +1,6 @@
 #include "awpch.h"
 #include "Renderer.h"
+#include "Renderer2D.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -8,7 +9,10 @@ namespace AmyWare {
 	Renderer::SceneData* Renderer::sceneData = new Renderer::SceneData;
 
 	void Renderer::Init() {
+		AW_PROFILE_FUNCTION();
+
 		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height) {
@@ -19,6 +23,8 @@ namespace AmyWare {
 		sceneData->ViewProjectionMatrix = camera.GetViewProjection();
 	}
 	void Renderer::EndScene() {
+	}
+	void Renderer::Shutdown() {
 	}
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform) {
 		shader->Bind();

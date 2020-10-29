@@ -1,5 +1,5 @@
 #pragma once
-#include "AmyWare/Core.h"
+#include "AmyWare/Core/Core.h"
 #include "awpch.h"
 
 #include <sstream>

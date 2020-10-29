@@ -1,6 +1,6 @@
 workspace "AmyWare"
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "AmyEdit"
 
 	configurations {
 		"Debug",
@@ -91,6 +91,55 @@ project "AmyWare"
 
 project "Sandbox"
 	location "Sandbox"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files {
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+	includedirs {
+		"AmyWare/vendor/spdlog/include",
+		"AmyWare/src",
+		"AmyWare/vendor",
+		"%{IncludeDir.glm}",
+	}
+	links {
+		"AmyWare"
+	}
+	filter "system:windows"
+		systemversion "latest"
+
+		defines {
+			"AW_PLATFORM_WINDOWS"
+		}
+
+	filter "configurations:Debug"
+		defines "AW_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "AW_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "AW_DIST"
+		runtime "Release"
+		optimize "on"
+
+
+
+
+
+project "AmyEdit"
+	location "AmyEdit"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"

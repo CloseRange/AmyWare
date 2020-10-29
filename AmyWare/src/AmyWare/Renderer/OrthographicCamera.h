@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 
 namespace AmyWare {
+
+
 	class OrthographicCamera {
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top);
