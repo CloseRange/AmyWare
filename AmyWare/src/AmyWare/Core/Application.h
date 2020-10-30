@@ -30,6 +30,9 @@ namespace AmyWare {
 		void Close() {
 			m_Running = false;
 		}
+
+		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
+
 	private:
 		bool OnWindowClosed(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);

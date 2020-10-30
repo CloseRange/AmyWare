@@ -84,7 +84,7 @@ void Sandbox2D::OnUpdate(AmyWare::Timestep ts) {
 			//float ny = (y + 5) / 10.0f;
 			//float nx = (x + 5) / 10.0f;
 			//AmyWare::Drawable().SetPosition(x, y).SetSize(.45f, .45f).SetColorN(nx, 0.4f, ny, .5f).Draw();
-			// drawQuads[y * 20 + x].Draw();
+			drawQuads[y * 20 + x].Draw();
 		}
 	}
 	AmyWare::Renderer2D::EndScene();

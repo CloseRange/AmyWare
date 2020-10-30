@@ -43,6 +43,7 @@ namespace AmyWare {
 	}
 	void OpenGLFrameBuffer::Bind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, rendererID);
+		glViewport(0, 0, specification.Width, specification.Height);
 	}
 	void OpenGLFrameBuffer::Unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

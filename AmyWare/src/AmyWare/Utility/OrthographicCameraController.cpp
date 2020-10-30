@@ -48,10 +48,13 @@ namespace AmyWare {
 	}
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e) {
 		AW_PROFILE_FUNCTION();
-
-		aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-		CalculateView();
+		
+		Resize((float)e.GetWidth(), (float)e.GetHeight());
 		return false;
+	}
+	void OrthographicCameraController::Resize(float width, float height) {
+		aspectRatio = width / height;
+		CalculateView();
 	}
 	void OrthographicCameraController::CalculateView() {
 		bounds = { -aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel };

@@ -14,7 +14,7 @@ namespace AmyWare {
 
 
 		void Draw() {
-			// Renderer2D::ComplexDrawRotated(Position, Size, Image, Position.z, Color, TileCount, Rotation);
+			//Renderer2D::ComplexDrawRotated(Position, Size, Image, Position.z, Color, TileCount, Rotation);
 			Clean();
 			Renderer2D::DrawComplex(Transform, Image, TexCoords, Color, TileCount);
 		}

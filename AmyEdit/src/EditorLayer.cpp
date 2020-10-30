@@ -49,7 +49,7 @@ namespace AmyWare {
 		AW_PROFILE_FUNCTION();
 
 
-		camera.OnUpdate(ts);
+		if(viewportFocused) camera.OnUpdate(ts);
 
 		Renderer2D::ResetStats();
 		Renderer2D::GetStats().Time = ts;
@@ -175,15 +175,23 @@ namespace AmyWare {
 		ImGui::Text("   Indices:             %d", stats.GetTotalIndexCount());
 		ImGui::End();
 
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+		viewportFocused = ImGui::IsWindowFocused();
+		viewportHovered = ImGui::IsWindowHovered();
+		Application::Get().GetImGuiLayer()->BlockEvents(!viewportFocused || !viewportHovered);
+		
 		ImVec2 vs = ImGui::GetContentRegionAvail();
 		if (viewportSize != *((glm::vec2*)&vs)) {
 			frameBuffer->Resize((uint32_t)vs.x, (uint32_t)vs.y);
 			viewportSize = { vs.x, vs.y };
+
+			camera.Resize(viewportSize.x, viewportSize.y);
 		}
 		uint32_t texID = frameBuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)texID, ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		ImGui::End();
+		ImGui::PopStyleVar();
 
 		ImGui::End();
 	}

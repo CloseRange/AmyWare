@@ -24,8 +24,8 @@ namespace AmyWare {
 		glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		Drawable drawQuads[20 * 20];
-
-		glm::vec2 viewportSize;
+		bool viewportFocused = false, viewportHovered = false;
+		glm::vec2 viewportSize{ 0.0f, 0.0f };
 
 	};
 }
