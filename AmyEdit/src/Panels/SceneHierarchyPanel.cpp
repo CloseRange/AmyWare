@@ -96,10 +96,15 @@ namespace AmyWare {
 		ImGui::PopID();
 	}
 	static void AddVecButton(float& value, char* name, char* name2, ImVec4 c1, ImVec4 c2, ImVec2 buttonSize, float resetValue = 0.0f) {
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldFont = io.Fonts->Fonts[0];
+
 		ImGui::PushStyleColor(ImGuiCol_Button, c1);
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, c2);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, c1);
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button(name, buttonSize)) value = resetValue;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
