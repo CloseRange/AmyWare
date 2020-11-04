@@ -15,6 +15,7 @@ IncludeDir["Glad"] = "AmyWare/vendor/Glad/include"
 IncludeDir["ImGui"] = "AmyWare/vendor/imgui"
 IncludeDir["glm"] = "AmyWare/vendor/glm"
 IncludeDir["stb_image"] = "AmyWare/vendor/stb_image"
+IncludeDir["entt"] = "AmyWare/vendor/entt/include"
 
 group "Dependencies"
 	include "AmyWare/vendor/GLFW"
@@ -53,7 +54,8 @@ project "AmyWare"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}"
 	}
 	links {
 		"GLFW",
@@ -108,6 +110,7 @@ project "Sandbox"
 		"AmyWare/src",
 		"AmyWare/vendor",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 	links {
 		"AmyWare"
@@ -157,6 +160,7 @@ project "AmyEdit"
 		"AmyWare/src",
 		"AmyWare/vendor",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 	links {
 		"AmyWare"

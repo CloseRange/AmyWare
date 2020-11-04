@@ -6,6 +6,7 @@
 
 #include <glm/glm.hpp>
 #include <glm\ext\matrix_transform.hpp>
+#include <glm\gtx\matrix_decompose.hpp>
 
 namespace AmyWare {
 	struct Drawable {
@@ -26,6 +27,12 @@ namespace AmyWare {
 		}
 		static Drawable Quad(float x1, float y1, float x2, float y2, glm::vec4 colorNormal) {
 			return Drawable().SetPosition(x1, y1, x2, y2).SetColorN(colorNormal);
+		}
+		static Drawable Quad(glm::mat4 transform) {
+			return Quad(transform, { 1.0f, 1.0f, 1.0f, 1.0f });
+		}
+		static Drawable Quad(glm::mat4 transform, glm::vec4 colorNormal) {
+			return Drawable().SetTransform(transform).SetColorN(colorNormal);
 		}
 
 
@@ -90,9 +97,18 @@ namespace AmyWare {
 			TexCoords[3] = tc[3];
 			return *this;
 		}
+		Drawable SetTransform(glm::mat4 transform) {
+			Transform = transform;
+			glm::vec3 skew;
+			glm::quat rot;
+			glm::vec4 persp;
+			glm::decompose(transform, Size, rot, Position, skew, persp);
+			Rotation = rot.z;
+			return *this;
+		}
 
 
-
+		
 		Drawable Clean() {
 			if (!Dirty) return *this;
 			Transform = glm::translate(glm::mat4(1.0f), Position);
@@ -108,6 +124,7 @@ namespace AmyWare {
 		glm::vec3 Position{ 0.0f, 0.0f, 0.0f };
 		glm::vec3 Size{ 1.0f, 1.0f, 1.0f };
 		float Rotation = 0.0f;
+		glm::vec4 Perspective = glm::vec4(1.0f);
 		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
 		Ref<Texture2D> Image = Renderer2D::PixelTexture();//, { 0.0f, 0.0f }, { 1.0f, 1.0f }); // Renderer2D::PixelTexture(), { 0.0f, 0.0f }, { 1.0f, 1.0f });
 		glm::vec2 TexCoords[4] = { { 0.0f, 0.0f }, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };

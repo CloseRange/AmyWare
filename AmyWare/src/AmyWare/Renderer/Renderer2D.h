@@ -3,14 +3,17 @@
 #include "OrthographicCamera.h"
 #include <AmyWare\Renderer\Texture.h>
 #include <AmyWare\Renderer\SubTexture2D.h>
+#include <AmyWare\Renderer\Camera.h>
 
 namespace AmyWare {
 	class Renderer2D {
 	public:
+
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		static void BeginScene(const OrthographicCamera& camera); // TODO: Remove
 		static void EndScene();
 		static void Flush();
 

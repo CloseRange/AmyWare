@@ -19,7 +19,7 @@ namespace AmyWare {
 			case ShaderDataType::Int4:     return GL_INT;
 			case ShaderDataType::Bool:     return GL_BOOL;
 		}
-		AW_CORE_ASSERT(false, "Uknown ShaderDataType!");
+		AW_CORE_ASSERT(false, "Unkown ShaderDataType!");
 		return 0;
 	}
 

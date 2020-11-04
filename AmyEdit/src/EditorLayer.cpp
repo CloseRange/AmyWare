@@ -18,25 +18,51 @@ namespace AmyWare {
 		fbSpec.Height = 720;
 		frameBuffer = FrameBuffer::Create(fbSpec);
 
-		texture = Texture2D::Create("assets/textures/bork.png");
-		textureMap = Texture2D::Create("assets/textures/outside.png");
-		subTexTree = SubTexture2D::CreateFromCoords(textureMap, { 1, 15 }, { 16, 16 });
+		// texture = Texture2D::Create("assets/textures/bork.png");
+		// textureMap = Texture2D::Create("assets/textures/outside.png");
+		// subTexTree = SubTexture2D::CreateFromCoords(textureMap, { 1, 15 }, { 16, 16 });
+
+		activeScene = CreateRef<Scene>();
+		square = activeScene->CreateEntity("Square");
+		square.Add<CSpriteRenderer>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+		square = activeScene->CreateEntity("Square 2");
+		square.Add<CSpriteRenderer>(glm::vec4{ 0.0f, 1.0f, 1.0f, 1.0f });
+
+		cameraEntity = activeScene->CreateEntity("Camera");
+		cameraEntity.Add<CCamera>();
+		
+		cameraEntity2 = activeScene->CreateEntity("Camera 2");
+		cameraEntity2.Add<CCamera>();
 
 
-		for (int y = 0; y < 20; y++) {
-			for (int x = 0; x < 20; x++) {
-				float dx = (float)x / 20.0f;
-				float dy = (float)y / 20.0f;
-				float range = 10.0f;
-				float s = range / 20.0f - .05; // area / count
-				drawQuads[y * 20 + x] = Drawable()
-					.SetPosition(dx * range - range / 2.0f, dy * range - range / 2.0f)
-					.SetSize(s, s)
-					.SetColorN(dx, 0.4f, dy, .5f)
-					.SetDepth(-.5f)
-					.Clean();
+
+		class CameraController : public ScriptableEntity {
+		public:
+			void OnCreate() {
+
 			}
-		}
+			void OnDestroy() {
+
+			}
+			void OnUpdate(Timestep ts) {
+				auto& prime = GetComponent<CCamera>().Primary;
+				if (!prime) return;
+				auto& transform = GetComponent<CTransform>().Position;
+				float spd = 5.0f;
+				if (Input::IsKeyDown(KeyCode::A))
+					transform.x -= spd * ts;
+				if (Input::IsKeyDown(KeyCode::D))
+					transform.x += spd * ts;
+				if (Input::IsKeyDown(KeyCode::W))
+					transform.y += spd * ts;
+				if (Input::IsKeyDown(KeyCode::S))
+					transform.y -= spd * ts;
+			}
+		};
+		cameraEntity.Add<CNativeScript>().Bind<CameraController>();
+		cameraEntity2.Add<CNativeScript>().Bind<CameraController>();
+
+		scenePanel.SetContext(activeScene);
 
 	}
 
@@ -47,43 +73,34 @@ namespace AmyWare {
 
 	void EditorLayer::OnUpdate(Timestep ts) {
 		AW_PROFILE_FUNCTION();
+		FrameBufferSpecification spec = frameBuffer->GetSpecification();
+
+		if(FrameBufferSpecification spec = frameBuffer->GetSpecification();
+			viewportSize.x > 0.0f && viewportSize.y > 0.0f && 
+			(spec.Width != viewportSize.x || spec.Height != viewportSize.y)) {
+
+
+			frameBuffer->Resize((uint32_t) viewportSize.x, (uint32_t) viewportSize.y);
+			camera.Resize(viewportSize.x, viewportSize.y);
+
+			activeScene->OnViewportResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+		}
 
 
 		if(viewportFocused) camera.OnUpdate(ts);
 
+
 		Renderer2D::ResetStats();
 		Renderer2D::GetStats().Time = ts;
 
+		// ----------   RENDER PREP   ---------------
 		frameBuffer->Bind();
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 
-		static float rotation = 0.0f;
-		rotation += ts * 50.0f;
-		auto d = Drawable().SetColor(150, 20, 50).SetPosition(-.5f, -.5f, .5f, .5f);
 
-		Renderer2D::BeginScene(camera.GetCamera());
-
-		//Renderer2D::DrawQuad(-.5f, -.5f, .5f, .5f, color);
-		Drawable().SetTexture(subTexTree).SetDepth(.1f).Draw();
-		Drawable().SetPosition(.6f, 0.0f).SetRotationD(rotation).SetTexture(texture).SetDepth(.1f).Draw();
-		//Renderer2D::DrawQuad(-.7f, -.3f, .7f, .3f, glm::vec4({ 0.3f, 0.8f, 0.2f, 1.0f }));
-		Drawable()
-			.SetPosition(-.2, -.2, .2, .2)
-			.SetColor(255, 100, 100, 100)
-			.SetDepth(0.5f)
-			.Draw();
-		//Renderer2D::EndScene();
-		//Renderer2D::BeginScene(camera.GetCamera());
-		for (int y = 0; y < 20; y++) {
-			for (int x = 0; x < 20; x++) {
-//float ny = (y + 5) / 10.0f;
-//float nx = (x + 5) / 10.0f;
-//Drawable().SetPosition(x, y).SetSize(.45f, .45f).SetColorN(nx, 0.4f, ny, .5f).Draw();
-// drawQuads[y * 20 + x].Draw();
-			}
-		}
-		Renderer2D::EndScene();
+		// -----------   UPDATE SCENE   --------------
+		activeScene->OnUpdate(ts);
 
 		frameBuffer->Unbind();
 
@@ -162,17 +179,21 @@ namespace AmyWare {
 		}
 
 
-		ImGui::Begin("Settings");
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(color));
+		ImGui::Begin("Renderer Stats");
+		ImGui::Separator();
+
+
+		scenePanel.OnImGuiRender();
+
 		auto stats = Renderer2D::GetStats();
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("   Frame Time:          %.4f", stats.Time);
-		ImGui::Text("   FPS:                 %.2f", (1.0f / stats.Time));
-		ImGui::Text("   Quad Reset Count:    %d", stats.QuadRefreshes);
-		ImGui::Text("   Draw Calls:          %d", stats.DrawCalls);
-		ImGui::Text("   Quads:               %d", stats.QuadCount);
-		ImGui::Text("   Vertices:            %d", stats.GetTotalVertexCount());
-		ImGui::Text("   Indices:             %d", stats.GetTotalIndexCount());
+		ImGui::Text("Frame Time:          %.4f", stats.Time);
+		ImGui::Text("FPS:                 %.2f", (1.0f / stats.Time));
+		ImGui::Text("Quad Reset Count:    %d", stats.QuadRefreshes);
+		ImGui::Text("Draw Calls:          %d", stats.DrawCalls);
+		ImGui::Text("Quads:               %d", stats.QuadCount);
+		ImGui::Text("Vertices:            %d", stats.GetTotalVertexCount());
+		ImGui::Text("Indices:             %d", stats.GetTotalIndexCount());
+
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
@@ -182,11 +203,10 @@ namespace AmyWare {
 		Application::Get().GetImGuiLayer()->BlockEvents(!viewportFocused || !viewportHovered);
 		
 		ImVec2 vs = ImGui::GetContentRegionAvail();
-		if (viewportSize != *((glm::vec2*)&vs)) {
-			frameBuffer->Resize((uint32_t)vs.x, (uint32_t)vs.y);
+		if (viewportSize != *((glm::vec2*)&vs) && vs.x > 0 && vs.y > 0) {
+			//frameBuffer->Resize((uint32_t)vs.x, (uint32_t)vs.y);
 			viewportSize = { vs.x, vs.y };
-
-			camera.Resize(viewportSize.x, viewportSize.y);
+			//camera.Resize(viewportSize.x, viewportSize.y);
 		}
 		uint32_t texID = frameBuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)texID, ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });

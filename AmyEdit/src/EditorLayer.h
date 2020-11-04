@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AmyWare.h"
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace AmyWare {
 	class EditorLayer : public Layer {
@@ -17,15 +18,17 @@ namespace AmyWare {
 
 	private:
 		OrthographicCameraController camera;
-		Ref<Texture2D> texture;
-		Ref<Texture2D> textureMap;
-		Ref<SubTexture2D> subTexTree;
 		Ref<FrameBuffer> frameBuffer;
-		glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-		Drawable drawQuads[20 * 20];
+		Ref<Scene> activeScene;
+		Entity square;
+		Entity cameraEntity, cameraEntity2;
+
 		bool viewportFocused = false, viewportHovered = false;
 		glm::vec2 viewportSize{ 0.0f, 0.0f };
+
+		// Panels
+		SceneHierarchyPanel scenePanel;
 
 	};
 }

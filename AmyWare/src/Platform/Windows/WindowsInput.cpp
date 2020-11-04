@@ -7,15 +7,15 @@
 namespace AmyWare {
 
 
-	bool Input::IsKeyDown(int keycode) {
+	bool Input::IsKeyDown(KeyCode keycode) {
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 
-		auto state = glfwGetKey(window, keycode);
+		auto state = glfwGetKey(window, (uint32_t)keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
-	bool Input::IsMouseDown(int button) {
+	bool Input::IsMouseDown(MouseCode button) {
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		auto state = glfwGetMouseButton(window, button);
+		auto state = glfwGetMouseButton(window, (uint32_t)button);
 		return state == GLFW_PRESS;
 	}
 	std::pair<float, float> Input::GetMouse() {

@@ -112,6 +112,20 @@ namespace AmyWare {
 
 	}
 
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform) {
+		AW_PROFILE_FUNCTION();
+
+		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
+		data.TextureShader->Bind();
+		data.TextureShader->SetMat4("u_ViewProjection", viewProj);
+
+		data.QuadIndexCount = 0;
+		data.QuadVertexBufferPtr = data.QuadVertexBufferBase;
+
+		data.TextureSlotIndex = 1;
+	}
+
 	void Renderer2D::BeginScene(const OrthographicCamera& camera) {
 		AW_PROFILE_FUNCTION();
 

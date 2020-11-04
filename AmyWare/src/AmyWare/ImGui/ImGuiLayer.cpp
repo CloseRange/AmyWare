@@ -32,6 +32,8 @@ namespace AmyWare {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Roboto/Roboto-Black.ttf", 18.0f);
+
 		// Setup Dear ImGui style
 		ImGui::StyleColorsClassic();
 		//ImGui::StyleColorsClassic();
@@ -43,7 +45,7 @@ namespace AmyWare {
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 		//style.ScaleAllSizes(1.3);
-		ImGui::GetIO().FontGlobalScale = 2.0f;
+		ImGui::GetIO().FontGlobalScale = 1.5f;
 
 		Application& app = Application::Get();
 		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());

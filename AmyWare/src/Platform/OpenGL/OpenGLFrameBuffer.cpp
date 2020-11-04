@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 
 namespace AmyWare {
+	static uint32_t MaxFrameBufferSize = 8169;
 	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec) : specification(spec) {
 
 		Invalidate();
@@ -49,6 +50,10 @@ namespace AmyWare {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height) {
+		if (width == 0 || height == 0 || width > MaxFrameBufferSize || height > MaxFrameBufferSize) {
+			AW_CORE_WARN("Attempting to resize framebuffer to ({0}, {1})", width, height);
+			return;
+		}
 		specification.Width = width;
 		specification.Height = height;
 		Invalidate();

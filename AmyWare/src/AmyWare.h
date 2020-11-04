@@ -1,6 +1,6 @@
 #pragma once
 // ---------------------------------
-// ---   CORE  ---------------------
+// ---   CORE   --------------------
 // ---------------------------------
 #include "AmyWare/Core/Application.h"
 
@@ -8,15 +8,23 @@
 
 #include "AmyWare/Core/Input.h"
 #include "AmyWare/Core/KeyCodes.h"
-#include "AmyWare/Core/MouseButtonCodes.h"
+#include "AmyWare/Core/MouseCodes.h"
 
 // ---------------------------------
-// ---   GUI  ----------------------
+// ---   SCENE   -------------------
+// ---------------------------------
+#include "AmyWare/Scene/Scene.h"
+#include "AmyWare/Scene/Components.h"
+#include "AmyWare/Scene/Entity.h"
+#include "AmyWare/Scene/ScriptableEntity.h"
+
+// ---------------------------------
+// ---   GUI   ---------------------
 // ---------------------------------
 #include "AmyWare/ImGui/ImGuiLayer.h"
 
 // ---------------------------------
-// ---   UTILITY  ------------------
+// ---   UTILITY   -----------------
 // ---------------------------------
 #include "AmyWare/Utility/Log.h"
 #include "AmyWare/Utility/Timestep.h"
@@ -25,7 +33,7 @@
 
 
 // ---------------------------------
-// ---   Renderer  -----------------
+// ---   Renderer   ----------------
 // ---------------------------------
 #include "AmyWare/Renderer/Renderer.h"
 #include "AmyWare/Renderer/Renderer2D.h"
@@ -39,4 +47,5 @@
 #include "AmyWare/Renderer/VertexArray.h"
 
 #include "AmyWare/Renderer/OrthographicCamera.h"
+#include "AmyWare/Renderer/Perspective.h"
 

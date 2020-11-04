@@ -12,20 +12,20 @@ namespace AmyWare {
 	void OrthographicCameraController::OnUpdate(Timestep ts) {
 		AW_PROFILE_FUNCTION();
 
-		if (Input::IsKeyDown(AW_KEY_A))
+		if (Input::IsKeyDown(KeyCode::A))
 			camPosition.x -= camMoveSpeed * ts;
-		if (Input::IsKeyDown(AW_KEY_D))
+		if (Input::IsKeyDown(KeyCode::D))
 			camPosition.x += camMoveSpeed * ts;
 
-		if (Input::IsKeyDown(AW_KEY_W))
+		if (Input::IsKeyDown(KeyCode::W))
 			camPosition.y += camMoveSpeed * ts;
-		if (Input::IsKeyDown(AW_KEY_S))
+		if (Input::IsKeyDown(KeyCode::S))
 			camPosition.y -= camMoveSpeed * ts;
 
 		if (allowRotation) {
-			if (Input::IsKeyDown(AW_KEY_Q))
+			if (Input::IsKeyDown(KeyCode::Q))
 				camRotation += camRotationSpeed * ts;
-			if (Input::IsKeyDown(AW_KEY_E))
+			if (Input::IsKeyDown(KeyCode::E))
 				camRotation -= camRotationSpeed * ts;
 			camera.SetRotation(camRotation);
 		}
