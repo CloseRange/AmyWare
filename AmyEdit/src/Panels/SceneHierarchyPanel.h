@@ -16,8 +16,8 @@ namespace AmyWare {
 	private:
 		void DrawEntityNode(Entity entity);
 		void DrawComponents(Entity entity);
-		template<typename T, typename Func>
-		void DrawComp(Entity e, char* text, Func f);
+		template<typename T, typename UIFunction>
+		void DrawComp(const std::string& text, Entity entity, bool destroyable, UIFunction uiFunction);
 		Ref<Scene> context;
 		Entity selectionContext;
 	};

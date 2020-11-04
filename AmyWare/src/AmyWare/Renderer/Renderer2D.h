@@ -13,9 +13,9 @@ namespace AmyWare {
 		static void Shutdown();
 
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
-		static void BeginScene(const OrthographicCamera& camera); // TODO: Remove
 		static void EndScene();
 		static void Flush();
+
 
 		// Primitives
 		static Ref<Texture2D> PixelTexture();
@@ -30,6 +30,7 @@ namespace AmyWare {
 
 		// Stats
 		struct Statistics {
+			uint32_t DrawableCalls = 0;
 			uint32_t DrawCalls = 0;
 			uint32_t QuadCount = 0;
 			float Time = 0;
@@ -41,8 +42,9 @@ namespace AmyWare {
 		static Statistics& GetStats();
 		static void ResetStats();
 	private:
-		static void StartNewBatch();
 		static float GetSetTextureIndex(Ref<Texture2D> tex);
+		static void StartBatch();
+		static void NextBatch();
 	};
 }
 

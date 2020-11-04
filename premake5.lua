@@ -1,3 +1,5 @@
+  include "./vendor/premake/premake_customization/solution_items.lua"
+
 workspace "AmyWare"
 	architecture "x64"
 	startproject "AmyEdit"
@@ -16,11 +18,14 @@ IncludeDir["ImGui"] = "AmyWare/vendor/imgui"
 IncludeDir["glm"] = "AmyWare/vendor/glm"
 IncludeDir["stb_image"] = "AmyWare/vendor/stb_image"
 IncludeDir["entt"] = "AmyWare/vendor/entt/include"
+IncludeDir["yaml_cpp"] = "AmyWare/vendor/yaml-cpp/include"
 
 group "Dependencies"
+	include "vendor/premake"
 	include "AmyWare/vendor/GLFW"
 	include "AmyWare/vendor/Glad"
 	include "AmyWare/vendor/imgui"
+	include "AmyWare/vendor/yaml-cpp"
 group ""
 
 project "AmyWare"
@@ -55,12 +60,14 @@ project "AmyWare"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 	links {
 		"GLFW",
 		"Glad",
 		"ImGui",
+		"yaml-cpp",
 		"opengl32.lib"
 	}
 	filter "system:windows"
@@ -110,7 +117,8 @@ project "Sandbox"
 		"AmyWare/src",
 		"AmyWare/vendor",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 	links {
 		"AmyWare"
@@ -160,7 +168,8 @@ project "AmyEdit"
 		"AmyWare/src",
 		"AmyWare/vendor",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 	links {
 		"AmyWare"

@@ -17,6 +17,12 @@ namespace AmyWare {
 		virtual void OnEvent(Event& e) override;
 
 	private:
+		bool OnKeyPressed(KeyPressedEvent& e);
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+		void SaveScene();
+
 		OrthographicCameraController camera;
 		Ref<FrameBuffer> frameBuffer;
 

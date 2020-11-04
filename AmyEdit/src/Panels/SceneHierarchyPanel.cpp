@@ -12,6 +12,7 @@ namespace AmyWare {
 
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& context) {
 		this->context = context;
+		selectionContext = {};
 	}
 
 	void SceneHierarchyPanel::OnImGuiRender() {
@@ -36,19 +37,6 @@ namespace AmyWare {
 		ImGui::Begin("Properties");
 		if (selectionContext) {
 			DrawComponents(selectionContext);
-			if (ImGui::Button("Add Component"))
-				ImGui::OpenPopup("AddComponent");
-			if (ImGui::BeginPopup("AddComponent")) {
-				if (ImGui::MenuItem("Camera")) {
-					selectionContext.Add<CCamera>();
-					ImGui::CloseCurrentPopup();
-				}
-				if (ImGui::MenuItem("Sprite Renderer")) {
-					selectionContext.Add<CSpriteRenderer>();
-					ImGui::CloseCurrentPopup();
-				}
-				ImGui::EndPopup();
-			}
 		}
 		ImGui::End();
 	}
@@ -56,6 +44,7 @@ namespace AmyWare {
 		auto& tag = entity.Get<CTag>().Tag;
 		auto sel = (selectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0;
 		ImGuiTreeNodeFlags flags = sel | ImGuiTreeNodeFlags_OpenOnArrow;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
 		if (ImGui::IsItemClicked()) {
 			selectionContext = entity;
@@ -155,50 +144,67 @@ namespace AmyWare {
 		char buffer[256];
 		memset(buffer, 0, sizeof(buffer));
 		strcpy_s(buffer, sizeof(buffer), tag.c_str());
-		if (ImGui::InputText("Tag", buffer, sizeof(buffer))) {
+		if (ImGui::InputText("##Tag", buffer, sizeof(buffer))) {
 			tag = std::string(buffer);
 		}
 	}
-	DrawComp<CTransform>(entity, "Transform", [&]() {
-		auto& tc = entity.Get<CTransform>();
+	ImGui::SameLine();
+	ImGui::PushItemWidth(-1);
+
+	if (ImGui::Button("Add Component"))
+		ImGui::OpenPopup("AddComponent");
+	if (ImGui::BeginPopup("AddComponent")) {
+		if (ImGui::MenuItem("Camera")) {
+			selectionContext.Add<CCamera>();
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("Sprite Renderer")) {
+			selectionContext.Add<CSpriteRenderer>();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+	ImGui::PopItemWidth();
+
+
+	DrawComp<CTransform>("Transform", entity, false, [](auto& component) {
 
 		const char* strs[] = { "0D", "1D", "2D", "3D" };
-		const char* viewPersp = strs[(int)tc.ViewPerspective];
+		const char* viewPersp = strs[(int)component.ViewPerspective];
 		if (ImGui::BeginCombo("Perspective", viewPersp)) {
-			bool sel2 = tc.ViewPerspective == Perspective::TWO;
-			bool sel3 = tc.ViewPerspective == Perspective::THREE;
+			bool sel2 = component.ViewPerspective == Perspective::TWO;
+			bool sel3 = component.ViewPerspective == Perspective::THREE;
 			if (ImGui::Selectable("2D", sel2))
-				tc.ViewPerspective = Perspective::TWO;
+				component.ViewPerspective = Perspective::TWO;
 			if (ImGui::Selectable("3D", sel3))
-				tc.ViewPerspective = Perspective::THREE;
+				component.ViewPerspective = Perspective::THREE;
 			if (sel2 || sel3) {
 				ImGui::SetItemDefaultFocus();
 			}
 			ImGui::EndCombo();
 		}
 
-		switch (tc.ViewPerspective) {
+		switch (component.ViewPerspective) {
 		case Perspective::TWO:
 		{
-			DrawVecPosition2D("Position", tc.Position);
-			DrawVecScale2D("Scale", tc.Scale, 1.0f);
-			DrawVecRotation2D("Rotation", tc.Rotation);
+			DrawVecPosition2D("Position", component.Position);
+			DrawVecScale2D("Scale", component.Scale, 1.0f);
+			DrawVecRotation2D("Rotation", component.Rotation);
 			break;
 		}
 		case Perspective::THREE:
 		{
-			DrawVec3Control("Position", tc.Position);
-			DrawVec3Control("Rotation", tc.Rotation);
-			DrawVec3Control("Scale", tc.Scale, 1.0f);
+			DrawVec3Control("Position", component.Position);
+			DrawVec3Control("Rotation", component.Rotation);
+			DrawVec3Control("Scale", component.Scale, 1.0f);
 			break;
 		}
 		}
 	});
-	DrawComp<CCamera>(entity, "Camera", [&]() {
-		auto& cameraComp = entity.Get<CCamera>();
-		auto& camera = cameraComp.Camera;
+	DrawComp<CCamera>("Camera", entity, true, [](auto& component) {
+		auto& camera = component.Camera;
 
-		ImGui::Checkbox("Primary", &cameraComp.Primary);
+		ImGui::Checkbox("Primary", &component.Primary);
 
 		const char* projectionStrings[] = { "Perspective", "Orthographic" };
 		const char* cProjectionString = projectionStrings[(int)camera.GetProjectionType()];
@@ -230,28 +236,40 @@ namespace AmyWare {
 			float oFar = camera.GetOrthographicFarClip();
 			if (ImGui::DragFloat("Far Clip", &oFar)) camera.SetOrthographicFarClip(oFar);
 
-			ImGui::Checkbox("Fixed Aspect Ratio", &cameraComp.FixedAspectRatio);
+			ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
 		}
 	});
-	DrawComp<CSpriteRenderer>(entity, "Sprite Renderer", [&]() {
-		auto& src = entity.Get<CSpriteRenderer>();
-		ImGui::ColorEdit4("Color", glm::value_ptr(src.Color));
+	DrawComp<CSpriteRenderer>("Sprite Renderer", entity, true, [](auto& component) {
+		ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 	});
 }
 
 
 
-	template<typename T, typename Func>
-	void SceneHierarchyPanel::DrawComp(Entity entity, char* text, Func f) {
+	template<typename T, typename UIFunction>
+	void SceneHierarchyPanel::DrawComp(const std::string& text, Entity entity, bool destroyable, UIFunction uiFunction) {
 		if (!entity.Has<T>()) return;
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
-		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap, text);
+		auto& component = entity.Get<T>();
+		ImVec2 contentRegion = ImGui::GetContentRegionAvail();
+		ImGuiTreeNodeFlags flags = 0;
+		flags |= ImGuiTreeNodeFlags_DefaultOpen;
+		flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
+		flags |= ImGuiTreeNodeFlags_Framed;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+		flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
+		flags |= ImGuiTreeNodeFlags_FramePadding;
 
-		ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-		if (ImGui::Button("+", ImVec2{ 20, 20 })) {
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImGui::Separator();
+		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), flags, text.c_str());
+		ImGui::PopStyleVar();
+
+
+		ImGui::SameLine(contentRegion.x - lineHeight * 0.5f);
+		if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight })) {
 			ImGui::OpenPopup("ComponentSettings");
 		}
-		ImGui::PopStyleVar();
 		bool removeComponent = false;
 		if (ImGui::BeginPopup("ComponentSettings")) {
 			if (ImGui::MenuItem("Remove Component"))
@@ -261,7 +279,7 @@ namespace AmyWare {
 		
 		
 		if (open) {
-			f();
+			uiFunction(component);
 			ImGui::TreePop();
 		}
 

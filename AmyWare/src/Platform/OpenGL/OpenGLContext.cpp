@@ -7,7 +7,7 @@
 namespace AmyWare {
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle) {
 		this->windowHandle = windowHandle;
-		AW_CORE_ASSERT(windowHandle,"GLFW Window has not yet been defined!");
+		AW_CORE_ASSERT(windowHandle,"Window Handle has not yet been defined!");
 	}
 	void OpenGLContext::Init() {
 		AW_PROFILE_FUNCTION();

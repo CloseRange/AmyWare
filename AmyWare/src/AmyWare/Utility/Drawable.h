@@ -17,6 +17,7 @@ namespace AmyWare {
 		void Draw() {
 			//Renderer2D::ComplexDrawRotated(Position, Size, Image, Position.z, Color, TileCount, Rotation);
 			Clean();
+			Renderer2D::GetStats().DrawableCalls++;
 			Renderer2D::DrawComplex(Transform, Image, TexCoords, Color, TileCount);
 		}
 		static Drawable Texture(Ref<Texture2D> tex, float x, float y) {

@@ -10,7 +10,7 @@
 
 namespace AmyWare {
 
-	struct QuadVertex {
+	static struct QuadVertex {
 		glm::vec3 Position;
 		glm::vec4 Color;
 		glm::vec2 TexCoord;
@@ -20,7 +20,7 @@ namespace AmyWare {
 	};
 
 	struct Renderer2DData {
-		static const uint32_t MaxQuads = 1000;
+		static const uint32_t MaxQuads = 20000;
 		static const uint32_t MaxVerts = MaxQuads * 4;
 		static const uint32_t MaxIndices = MaxQuads * 6;
 		static const uint32_t MaxTextureSlots = 32;
@@ -110,6 +110,7 @@ namespace AmyWare {
 	void Renderer2D::Shutdown() {
 		AW_PROFILE_FUNCTION();
 
+		delete[] data.QuadVertexBufferBase;
 	}
 
 	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform) {
@@ -119,34 +120,21 @@ namespace AmyWare {
 
 		data.TextureShader->Bind();
 		data.TextureShader->SetMat4("u_ViewProjection", viewProj);
-
-		data.QuadIndexCount = 0;
-		data.QuadVertexBufferPtr = data.QuadVertexBufferBase;
-
-		data.TextureSlotIndex = 1;
+		StartBatch();
 	}
 
-	void Renderer2D::BeginScene(const OrthographicCamera& camera) {
-		AW_PROFILE_FUNCTION();
-
-		data.TextureShader->Bind();
-		data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
-
-		data.QuadIndexCount = 0;
-		data.QuadVertexBufferPtr = data.QuadVertexBufferBase;
-
-		data.TextureSlotIndex = 1;
-	}
 	void Renderer2D::EndScene() {
 		AW_PROFILE_FUNCTION();
-
-		uint32_t dataSize = (uint8_t*)data.QuadVertexBufferPtr - (uint8_t*)data.QuadVertexBufferBase;
-		data.QuadVertexBuffer->SetData(data.QuadVertexBufferBase, dataSize);
 
 		Flush();
 	}
 
 	void Renderer2D::Flush() {
+		if (data.QuadIndexCount == 0) return;
+
+		uint32_t dataSize = (uint32_t)((uint8_t*)data.QuadVertexBufferPtr - (uint8_t*)data.QuadVertexBufferBase);
+		data.QuadVertexBuffer->SetData(data.QuadVertexBufferBase, dataSize);
+
 		for (uint32_t i = 0; i < data.TextureSlotIndex; i++) {
 			data.TextureSlots[i]->Bind(i);
 		}
@@ -154,13 +142,15 @@ namespace AmyWare {
 		RenderCommand::DrawIndexed(data.QuadVertexArray, data.QuadIndexCount);
 		data.Stats.DrawCalls++;
 	}
-	void Renderer2D::StartNewBatch() {
-		EndScene();
-
+	void Renderer2D::StartBatch() {
 		data.QuadIndexCount = 0;
 		data.QuadVertexBufferPtr = data.QuadVertexBufferBase;
 
 		data.TextureSlotIndex = 1;
+	}
+	void Renderer2D::NextBatch() {
+		Flush();
+		StartBatch();
 	}
 
 	Ref<Texture2D> Renderer2D::PixelTexture() {
@@ -206,17 +196,19 @@ namespace AmyWare {
 	float Renderer2D::GetSetTextureIndex(Ref<Texture2D> tex) {
 		AW_PROFILE_FUNCTION();
 		if (data.QuadIndexCount >= Renderer2DData::MaxIndices)
-			StartNewBatch();
+			NextBatch();
 
 		float textureIndex = -1.0f;
 
 		for (uint32_t i = 0; i < data.TextureSlotIndex; i++) {
-			if (*data.TextureSlots[i].get() == *tex.get()) {
+			if (*data.TextureSlots[i] == *tex) {
 				textureIndex = (float)i;
 				break;
 			}
 		}
 		if (textureIndex < 0.0f) {
+			if (data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+				NextBatch();
 			textureIndex = (float)data.TextureSlotIndex;
 			data.TextureSlots[data.TextureSlotIndex] = tex;
 			data.TextureSlotIndex++;

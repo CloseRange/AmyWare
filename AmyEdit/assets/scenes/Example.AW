@@ -1,0 +1,57 @@
+# AmyWare Scene File
+Scene: SCENE_NAME
+Entities:
+  - Entity ID: 12837192831273
+    Tag:
+      Tag: Square
+    Transform:
+      Position: [1.89999998, 1.10000002, 0]
+      Rotation: [0, 0, 1.10000002]
+      Scale: [1, 1, 1]
+    Sprite Renderer:
+      Color: [0.818532467, 0, 1, 1]
+  - Entity ID: 12837192831273
+    Tag:
+      Tag: Square 2
+    Transform:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Sprite Renderer:
+      Color: [0, 1, 1, 1]
+  - Entity ID: 12837192831273
+    Tag:
+      Tag: Camera
+    Transform:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Camera:
+      Camera Properties:
+        Projection Type: 1
+        Perspective FOV: 0.785398185
+        Perspective Near: 0.00999999978
+        Perspective Far: 1000
+        Orthographic Size: 10
+        Orthographic Near: -1
+        Orthographic Far: 1
+      Primary: true
+      Fixed Aspect Ratio: false
+  - Entity ID: 12837192831273
+    Tag:
+      Tag: Camera 2
+    Transform:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Camera:
+      Camera Properties:
+        Projection Type: 1
+        Perspective FOV: 0.785398185
+        Perspective Near: 0.00999999978
+        Perspective Far: 1000
+        Orthographic Size: 10
+        Orthographic Near: -1
+        Orthographic Far: 1
+      Primary: true
+      Fixed Aspect Ratio: false

@@ -4,7 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
+#include "AmyWare/Scene/SceneSerializer.h"
+#include "AmyWare/Utility/PlatformUtils.h"
 
 namespace AmyWare {
 	EditorLayer::EditorLayer() : Layer("EditorLayer"), camera(1280.0f / 720.0f) {
@@ -18,63 +19,21 @@ namespace AmyWare {
 		fbSpec.Height = 720;
 		frameBuffer = FrameBuffer::Create(fbSpec);
 
-		// texture = Texture2D::Create("assets/textures/bork.png");
-		// textureMap = Texture2D::Create("assets/textures/outside.png");
-		// subTexTree = SubTexture2D::CreateFromCoords(textureMap, { 1, 15 }, { 16, 16 });
-
 		activeScene = CreateRef<Scene>();
-		square = activeScene->CreateEntity("Square");
-		square.Add<CSpriteRenderer>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
-		square = activeScene->CreateEntity("Square 2");
-		square.Add<CSpriteRenderer>(glm::vec4{ 0.0f, 1.0f, 1.0f, 1.0f });
-
-		cameraEntity = activeScene->CreateEntity("Camera");
-		cameraEntity.Add<CCamera>();
-		
-		cameraEntity2 = activeScene->CreateEntity("Camera 2");
-		cameraEntity2.Add<CCamera>();
-
-
-
-		class CameraController : public ScriptableEntity {
-		public:
-			void OnCreate() {
-
-			}
-			void OnDestroy() {
-
-			}
-			void OnUpdate(Timestep ts) {
-				auto& prime = GetComponent<CCamera>().Primary;
-				if (!prime) return;
-				auto& transform = GetComponent<CTransform>().Position;
-				float spd = 5.0f;
-				if (Input::IsKeyDown(KeyCode::A))
-					transform.x -= spd * ts;
-				if (Input::IsKeyDown(KeyCode::D))
-					transform.x += spd * ts;
-				if (Input::IsKeyDown(KeyCode::W))
-					transform.y += spd * ts;
-				if (Input::IsKeyDown(KeyCode::S))
-					transform.y -= spd * ts;
-			}
-		};
-		cameraEntity.Add<CNativeScript>().Bind<CameraController>();
-		cameraEntity2.Add<CNativeScript>().Bind<CameraController>();
-
 		scenePanel.SetContext(activeScene);
 
+		//serializer.Serialize("assets/scenes/Example.AW");
+
+		//SceneSerializer serializer(activeScene);
+		//serializer.Deserialize("assets/scenes/Example.AW");
 	}
 
 	void EditorLayer::OnDetach() {
 		AW_PROFILE_FUNCTION();
-
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts) {
 		AW_PROFILE_FUNCTION();
-		FrameBufferSpecification spec = frameBuffer->GetSpecification();
-
 		if(FrameBufferSpecification spec = frameBuffer->GetSpecification();
 			viewportSize.x > 0.0f && viewportSize.y > 0.0f && 
 			(spec.Width != viewportSize.x || spec.Height != viewportSize.y)) {
@@ -95,7 +54,7 @@ namespace AmyWare {
 
 		// ----------   RENDER PREP   ---------------
 		frameBuffer->Bind();
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
 
@@ -108,14 +67,6 @@ namespace AmyWare {
 
 	void EditorLayer::OnImGuiRender() {
 		AW_PROFILE_FUNCTION();
-
-		// for (auto& r : profileResults) {
-		// 	char label[50];
-		// 	strcpy(label, "%.3fms  ");
-		// 	strcat(label, r.Name);
-		// 	ImGui::Text(label, r.Time);
-		// }
-		// profileResults.clear();
 
 		static bool dockspaceOpen = true;
 
@@ -160,10 +111,14 @@ namespace AmyWare {
 
 		// DockSpace
 		ImGuiIO& io = ImGui::GetIO();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float minWinX = style.WindowMinSize.x;
+		style.WindowMinSize.x = 370.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
+		style.WindowMinSize.x = minWinX;
 
 		if (ImGui::BeginMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
@@ -171,7 +126,12 @@ namespace AmyWare {
 				// which we can't undo at the moment without finer window depth/z control.
 				// ImGui::Separator();
 
+				if (ImGui::MenuItem("New", "Ctrl+N")) NewScene();
+				if (ImGui::MenuItem("Open...", "Ctrl+O")) OpenScene();
+				if (ImGui::MenuItem("Save", "Ctrl+S")) SaveScene();
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) SaveSceneAs();
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
+
 				ImGui::EndMenu();
 			}
 
@@ -189,6 +149,7 @@ namespace AmyWare {
 		ImGui::Text("Frame Time:          %.4f", stats.Time);
 		ImGui::Text("FPS:                 %.2f", (1.0f / stats.Time));
 		ImGui::Text("Quad Reset Count:    %d", stats.QuadRefreshes);
+		ImGui::Text("Drawable Calls:      %d", stats.DrawableCalls);
 		ImGui::Text("Draw Calls:          %d", stats.DrawCalls);
 		ImGui::Text("Quads:               %d", stats.QuadCount);
 		ImGui::Text("Vertices:            %d", stats.GetTotalVertexCount());
@@ -218,6 +179,57 @@ namespace AmyWare {
 
 	void EditorLayer::OnEvent(Event& e) {
 		camera.OnEvent(e);
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyPressedEvent>(AW_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+	}
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e) {
 
+		// shortcuts
+		if (e.GetRepeatCount() > 0) return false;
+		bool ctrl = Input::IsKeyDown(KeyCode::LeftControl) || Input::IsKeyDown(KeyCode::RightControl);
+		bool shft = Input::IsKeyDown(KeyCode::LeftShift) || Input::IsKeyDown(KeyCode::RightShift);
+		switch ((KeyCode)e.GetKeyCode()) {
+		case KeyCode::N: {
+			if (ctrl) NewScene();
+			break;
+		}
+		case KeyCode::S: {
+			if (ctrl && shft) SaveSceneAs();
+			break;
+		}
+		case KeyCode::O: {
+			if (ctrl) OpenScene();
+			break;
+		}
+		default:
+			break;
+		}
+		return false;
+	}
+	void EditorLayer::NewScene() {
+		activeScene = CreateRef<Scene>();
+		activeScene->OnViewportResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+		scenePanel.SetContext(activeScene);
+	}
+	void EditorLayer::OpenScene() {
+		std::string path = FileDialogs::OpenFile("AmyWare Scene (*.AW)\0*.AW\0");
+		if (!path.empty()) {
+			activeScene = CreateRef<Scene>();
+			activeScene->OnViewportResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+			scenePanel.SetContext(activeScene);
+
+			SceneSerializer serializer(activeScene);
+			serializer.Deserialize(path);
+		}
+	}
+	void EditorLayer::SaveSceneAs() {
+		std::string path = FileDialogs::SaveFile("AmyWare Scene (*.AW)\0*.AW\0");
+		if (!path.empty()) {
+			SceneSerializer serializer(activeScene);
+			serializer.Deserialize(path);
+		}
+	}
+	void EditorLayer::SaveScene()
+	{
 	}
 }

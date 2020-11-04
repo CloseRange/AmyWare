@@ -13,3 +13,4 @@ Sandbox/assets/
 **.vcxproj.user
 **.vcxproj.filters
 **.ini
+!imgui.ini

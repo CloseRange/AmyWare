@@ -10,3 +10,6 @@
 [submodule "AmyWare/vendor/glm"]
 	path = AmyWare/vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "AmyWare/vendor/yaml-cpp"]
+	path = AmyWare/vendor/yaml-cpp
+	url = https://github.com/thecherno/yaml-cpp

@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 
 namespace AmyWare {
-	static uint32_t MaxFrameBufferSize = 8169;
+	static uint32_t MaxFrameBufferSize = 8192;
 	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec) : specification(spec) {
 
 		Invalidate();
@@ -25,7 +25,6 @@ namespace AmyWare {
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
 		glBindTexture(GL_TEXTURE_2D, colorAttachment);
-
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, specification.Width, specification.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

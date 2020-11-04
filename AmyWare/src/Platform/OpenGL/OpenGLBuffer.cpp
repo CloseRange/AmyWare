@@ -49,10 +49,9 @@ namespace AmyWare {
 	// -------------------------------------------------
 
 
-	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count) {
+	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count) : count(count) {
 		AW_PROFILE_FUNCTION();
 
-		this->count = count;
 		glCreateBuffers(1, &rendererID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count* sizeof(uint32_t), indices, GL_STATIC_DRAW);
