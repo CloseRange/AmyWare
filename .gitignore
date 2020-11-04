@@ -5,7 +5,7 @@ Sandbox/assets/
 
 # Binaries
 **/bin/
-!vendor/bin/
+!vendor/premake/bin/
 # VS
 .vs/
 **.sln
