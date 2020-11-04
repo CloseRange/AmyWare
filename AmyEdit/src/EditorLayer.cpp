@@ -212,7 +212,7 @@ namespace AmyWare {
 		scenePanel.SetContext(activeScene);
 	}
 	void EditorLayer::OpenScene() {
-		std::string path = FileDialogs::OpenFile("AmyWare Scene (*.AW)\0*.AW\0");
+		std::string path = FileDialogs::OpenFile("AmyWare Scene (*.amyware)\0*.amyware\0");
 		if (!path.empty()) {
 			activeScene = CreateRef<Scene>();
 			activeScene->OnViewportResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
@@ -223,10 +223,10 @@ namespace AmyWare {
 		}
 	}
 	void EditorLayer::SaveSceneAs() {
-		std::string path = FileDialogs::SaveFile("AmyWare Scene (*.AW)\0*.AW\0");
+		std::string path = FileDialogs::SaveFile("AmyWare Scene (*.amyware)\0*.amyware\0");
 		if (!path.empty()) {
 			SceneSerializer serializer(activeScene);
-			serializer.Deserialize(path);
+			serializer.Serialize(path);
 		}
 	}
 	void EditorLayer::SaveScene()
